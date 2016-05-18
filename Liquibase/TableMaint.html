@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <script src="libs/d3/d3.min.js" charset="utf-8"></script>
+    <script src="libs/jquery/jquery-2.1.1.min.js" charset="utf-8"></script>
+    <script src="libs/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
+    <!--Stylesheets-->
+    <link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/myStyle.css">
+    <script>
+
+        var tableData = {};
+        function findColumnData(id){
+            var retVal;
+            tableData.columns.forEach(function(d){
+                if(id == d.column.id){
+                    retVal = d.column;
+                }
+            });
+
+            return retVal;
+        }
+        function nameUpdated(ctrl, id) {
+            var col = findColumnData(id);
+            if(col) {
+                col.newName = ctrl.value;
+            }
+            $('#theChangeLog').html(JSON.stringify(tableData));
+        }
+
+        function typeUpdated(ctrl, id) {
+            var col = findColumnData(id);
+            if(col) {
+                col.newType = ctrl.value;
+            }
+            $('#theChangeLog').html(JSON.stringify(tableData));
+        }
+
+        function newFieldDataTypeChanged(ctrl) {
+            if(ctrl.value == "number"){
+                $("#newFieldDefaultValue").attr("type", "number");
+            }
+            else if(ctrl.value == "varchar"){
+                $("#newFieldDefaultValue").attr("type", "text");
+            }
+            else if(ctrl.value == "date"){
+                $("#newFieldDefaultValue").attr("type", "date");
+            }
+        }
+
+        $(document).ready(function(){
+
+            var DATA_TYPES=["date","number","varchar"];
+
+            var addOptions=function(selVal){
+                var retVal="";
+
+                DATA_TYPES.forEach(function(d){
+                    if(selVal == d){
+                        retVal += "<option selected value='" + d + "'>" + d +"</option>";
+                    }
+                    else{
+                        retVal += "<option value='" + d + "'>" + d +"</option>";
+                    }
+                });
+
+                return retVal;
+            }
+
+            $("#newFieldDataType").append($(addOptions()))
+            ;
+            $("#addNewButton").click(function(){
+
+                addTableRow("3", $("#newField").val(),
+                                $("#newFieldDataType").val(),
+                                $("#newFieldLength").val(),
+                                $("#newFieldNullable").is(":checked"),
+                                $("#newFieldDefaultValue").val(),true);
+
+                $("#newField").val("")
+                $("#newFieldDataType").val("")
+                $("#newFieldLength").val("")
+                $("#newFieldDefaultValue").val("")
+            });
+
+            var addTableRow = function(id, name, type, length, isNullable, defaultValue, isNewRow) {
+
+                if(!defaultValue){
+                    defaultValue = "";
+                }
+
+                if(isNewRow){
+                    tableData.columns[tableData.columns.length] = {
+                      "column": {
+                        "id":id,
+                        "name": name,
+                        "type": type,
+                        "length": length,
+                        "nullable": isNullable,
+                        "new" : true
+                      }
+                    }
+                }
+
+                var disabledAttr = (isNewRow)? "" : "disabled";
+
+                $("#theTableBody").append("<tr>"+
+                            "<td><input rowId='"+id+"' " + disabledAttr +" type='text' value='"+ name.toUpperCase() +
+                            "' onchange=\"nameUpdated(this,'"+id+"')\"></td>"+
+                            "<td><select rowId=\"" +id+ "\" " + disabledAttr + " onchange=\"typeUpdated(this,'"+id+"')\">"+
+                                addOptions(type) +"</select></td>"+
+                            "<td><input rowId='"+id+"' "  + disabledAttr +" type='number' size='3' value='" + length +
+                            "'></td>"+
+                            "<td><input rowId='"+id+"' "  + ((isNullable) ? " checked": "") +" type='checkbox'></td>"+
+                            "<td><input rowId='"+id+"' "  + disabledAttr +" type='text' value='" + defaultValue +
+                            "'></td>"+
+                            ((isNewRow) ? "<td><input type='button' value='Del'></td>" :"<td>&nbsp;</td>")+
+                        "</tr>");
+            }
+
+            $("#listOfTables").change(function(){
+
+                $.getJSON( "data/table/"+$("#listOfTables").val()+".json", function( data ) {
+                    tableData = data;
+                    $("#theTableBody").html("");
+                    for(var i=0; i<data.columns.length; i++){
+                        var column = data.columns[i].column;
+
+                        addTableRow("", column.name, column.type,column.length,
+                        column.nullable,column.defaultValue, false);
+                    }
+
+                    console.log(data.columns[0])
+                })
+
+            })
+
+            $.getJSON( "data/tables.json", function( data ) {
+                var items = [];
+                $.each( data, function( key,val) {
+                    items.push( "<option id='" + val.name + "'>" + val.name+ "</option>" );
+                });
+                $( "#listOfTables").html(items.join( "" ));
+
+            });
+        });
+    </script>
+
+    <title></title>
+</head>
+<body>
+
+
+    <select id="listOfTables">
+
+    </select>
+    <table id="theTable">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Length</th>
+                <th>Nullable</th>
+                <th>Default Value</th>
+                <th>&nbsp;</th>
+            </tr>
+
+        </thead>
+        <tbody id="theTableBody">
+
+        </tbody>
+        <tfoot>
+            <tr>
+                <td><input type="text" id="newField"></td>
+                <td>
+                    <select id="newFieldDataType" onchange="newFieldDataTypeChanged(this)">
+
+                    </select>
+                </td>
+                <td><input type="number" id="newFieldLength"></td>
+                <td><input type="checkbox" id="newFieldNullable"></td>
+                <td><input type="text" id="newFieldDefaultValue"></td>
+                <td><input id="addNewButton" type="BUTTON" VALUE="Add"></td>
+            </tr>
+        </tfoot>
+    </table>
+    <div id="theChangeLog"></div>
+</body>
+</html>

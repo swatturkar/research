@@ -1,0 +1,52 @@
+{
+  "name":"table1",
+  "columns":[
+    {
+      "column":
+      {
+        "id":1,
+        "name":"table1_id",
+        "type":"varchar2",
+        "length":10,
+        "nullable":false
+      }
+    },
+    {
+      "column": {
+        "id":2,
+        "name": "added_by",
+        "type": "varchar2",
+        "length": 20,
+        "nullable": false
+      }
+    },
+    {
+      "column": {
+        "id":3,
+        "name": "added_date",
+        "type": "date",
+        "length": 10,
+        "nullable": false
+      }
+    },
+    {
+      "column": {
+        "id":5,
+        "name": "updated_by",
+        "type": "varchar2",
+        "length": 20,
+        "nullable": false
+      }
+    },
+    {
+      "column":
+      {
+        "id":6,
+        "name":"updated_date",
+        "type":"date",
+        "length":20,
+        "nullable":false
+      }
+    }
+  ]
+}

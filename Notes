@@ -31,6 +31,13 @@ Complexity of implementation and operation is the top blocker to adoption.
 	Learn.openshift.com
 	
 	RHEL7 is needed
+	
+	POD can have one container or POD can have multiple containers
+	
+	CONTAINER can have memory constraints, CPU constraints
+	POD is the lowest unit of work.
+	
+	x
   
   
   

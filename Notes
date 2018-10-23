@@ -1,0 +1,33 @@
+https://github.com/swatturkar/openshiftNotes.git
+Kubernetes
+
+Install / Deploy / Harden / Operate
+
+Complexity of implementation and operation is the top blocker to adoption.
+
+
+	Standard operating environment
+	
+
+	Redhat PAAS
+
+	Redhat's business model
+	
+	Take best of breed project, integrate, stabilize and deliver based subscription based model.
+	Community backed innovation
+
+	
+	Openshift container
+		OnPrem
+		Dedicated (AWS / Azure)
+		Online 
+
+	Multiple authenticatons available
+  
+  
+  
+  
+  
+  
+  
+  

@@ -43,6 +43,14 @@ Complexity of implementation and operation is the top blocker to adoption.
 	
 	Shift LEFT
 		Treat modelling security as a quality apptribute
+		
+		What does secure mean to u
+			dont build it from scratch
+			use reference architectures + apply custom polcies.
+			
+			Apply the security architecture
+			and the applications will inherit the security aspect.
+			
   
   
   
